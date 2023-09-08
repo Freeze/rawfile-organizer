@@ -1,5 +1,6 @@
 # rawfile-organizer
 Organize a giant folder folder of RAW files by their date
+*I have only tested this against RAW files from the Sony A1 and Sony a7RIV*
 
 
 ## What is the specific use case of this?  

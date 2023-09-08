@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import exifread
-import os
 from pathlib import Path
-
+import os
+import sys
+import exifread
 
 def check_all_files(directory):
     ''' Loop that finds all files in directory
@@ -12,8 +12,10 @@ def check_all_files(directory):
     for filename in os.scandir(directory):
         try:
             get_date_from_arw(filename, directory)
-        except:
-            exit
+        except KeyError:
+            sys.exit(1)
+        except KeyboardInterrupt:
+            sys.exit(1)
 
 def get_date_from_arw(filename, directory):
     ''' Function that handles parsing each raw file
@@ -27,7 +29,7 @@ def get_date_from_arw(filename, directory):
         filename = filename.name
         tags = exifread.process_file(f)
         date = str(tags['EXIF DateTimeOriginal'])
-        date = date.split(' ')[0].replace(':', '-')
+        date = date.split(' ', maxsplit=1)[0].replace(':', '-')
         if os.path.exists(date):
             Path(f"{directory}/{filename}").rename(f"{directory}/{date}/{filename}")
         else:
@@ -39,7 +41,5 @@ def get_date_from_arw(filename, directory):
 
 
 if __name__ == "__main__":
-    directory = "/path/to/directory/full-of-photos/"
-    check_all_files(directory)
-
-
+    PHOTO_DIR = "/path/to/directory/full-of-photos/"
+    check_all_files(PHOTO_DIR)
